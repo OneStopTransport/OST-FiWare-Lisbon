@@ -1,8 +1,15 @@
 class APIKeyError(Exception):
-    pass
+    def __str__(self):
+        return 'APIKeyError'
 
 class CrawlerError(Exception):
-    pass
+    def __str__(self):
+        return 'CrawlerError'
 
 class OSTError(Exception):
-    pass
+    def __str__(self):
+        return 'OSTError'
+    
+class FiWareError(Exception):
+    def __str__(self):
+        return 'FiWareError'
