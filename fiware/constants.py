@@ -13,25 +13,31 @@ def get_fiware_api(update=False):
     return 'http://' + FIWARE_IP + '/ngsi10/queryContext'
     
 FIWARE_GOOD_STATUS = {
-    "code" : "200",
-    "reasonPhrase" : "OK"
+    'code' : '200',
+    'reasonPhrase' : 'OK'
 }
 
 # OST API URLs and API Key
-OST_API_MAIN_URL = "https://api.ost.pt/"
+OST_API_MAIN_URL = 'https://api.ost.pt/'
 OST_API_KEY = os.environ.get('OST_SERVER_KEY')
 
 def get_ost_api(model_name, api_key):
     if model_name and api_key:
-        return OST_API_MAIN_URL + model_name + "?key=%s" % api_key
+        return OST_API_MAIN_URL + model_name + '?key=%s' % api_key
     return OST_API_MAIN_URL
 
 # GTFS APIs
-API_AGENCIES    = get_ost_api("agencies",   OST_API_KEY)
-API_ROUTES      = get_ost_api("routes",     OST_API_KEY)
-API_STOPS       = get_ost_api("stops",      OST_API_KEY)
-API_TRIPS       = get_ost_api("trips",      OST_API_KEY)
-API_STOPTIMES   = get_ost_api("stoptimes",  OST_API_KEY)
+API_AGENCIES    = get_ost_api('agencies',   OST_API_KEY)
+API_ROUTES      = get_ost_api('routes',     OST_API_KEY)
+API_STOPS       = get_ost_api('stops',      OST_API_KEY)
+API_TRIPS       = get_ost_api('trips',      OST_API_KEY)
+API_STOPTIMES   = get_ost_api('stoptimes',  OST_API_KEY)
 
 # GTFS Constants
-CP_NAME = "CP - Comboios de Portugal"
+CP_NAME  = 'CP - Comboios de Portugal'
+AGENCY   = 'Agency'
+ROUTE    = 'Route'
+TRIP     = 'Trip'
+STOP     = 'Stop'
+STOPTIME = 'StopTime'
+ID       = 'id'

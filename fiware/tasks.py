@@ -4,6 +4,12 @@ from celery.task import task
 from colorama    import Fore
 
 from .constants  import CP_NAME
+from .constants  import AGENCY
+from .constants  import ROUTE
+from .constants  import STOP
+from .constants  import TRIP
+from .constants  import STOPTIME
+from .constants  import ID
 from .exceptions import APIKeyError
 from .exceptions import CrawlerError
 from .exceptions import OSTError
@@ -31,20 +37,20 @@ def transfer_cp():
         # Get Data from OST and put into ContextBroker
         print '> Inserting Agency...',
         agency = crawler.get_agency(CP_NAME)
-        agency_id = agency.get('id')    
-        fiware.insert_data(agency, content_type='Agency')
+        agency_id = agency.get(ID)    
+        fiware.insert_data(agency, content_type=AGENCY)
         print 'Done.'
         # Get routes with agency == CP
         print '> Inserting Routes...',
         routes = crawler.get_routes(agency_id)
-        fiware.insert_data(routes, content_type='Route')
+        fiware.insert_data(routes, content_type=ROUTE)
         print 'Done.'
         # Get route IDs
         print '> Insertings Trips...',
-        route_ids = fiware.get_ids(fiware.get_data(content_type='Route')[1])
+        route_ids = fiware.get_ids(fiware.get_data(content_type=ROUTE)[1])
         # Get trips which route ID is on the routes list
         trips = crawler.get_trips(route_ids)        
-        fiware.insert_data(trips, content_type='Trip')
+        fiware.insert_data(trips, content_type=TRIP)
         print 'Done.'
     except (APIKeyError, CrawlerError, OSTError, FiWareError) as error:
         message = get_error_message(error)

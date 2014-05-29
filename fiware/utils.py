@@ -17,7 +17,7 @@ from .exceptions import FiWareError
 
 
 def get_error_message(error):
-    # Generic method for pretty printing an error message when crawler fails
+    """ Generic method for pretty printing an error message when crawler/updater fails """
     message_get = ' Unable to fetch data, '
     message_put = ' Unable to insert data, '
     if 'No API Key was provided' in error.message:
@@ -176,11 +176,11 @@ class FiWare(object):
           contains errors, returning True if not and
           False if something went wrong.
         """
-        fiware_error = "FiWare returned:\n\n"
+        fiware_error = 'FiWare returned:\n\n'
         if response.status_code != 200:
             return False, fiware_error + response.content
         content = simplejson.loads(response.content)
-        if "errorCode" in content.keys():
+        if 'errorCode' in content.keys():
             return False, fiware_error + content
         if content['contextResponses'][0]['statusCode'] == FIWARE_GOOD_STATUS:
             return True, content
@@ -196,11 +196,11 @@ class FiWare(object):
         api_url = get_fiware_api()
         headers = { 'content-type': 'application/json', 'accept': 'application/json' }
         json_data = {
-            "entities": [
+            'entities': [
                 {
-                    "type": content_type,
-                    "isPattern": "true",
-                    "id": ".*"
+                    'type': content_type,
+                    'isPattern': 'true',
+                    'id': '.*'
                 }
             ],
         }
@@ -219,7 +219,6 @@ class FiWare(object):
         if content:
             id_list = [ each.get('contextElement')['id'] for each in content.get('contextResponses') ]
         return id_list
-
     
     def insert_data(self, content, content_type):
         """
