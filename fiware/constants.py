@@ -1,6 +1,6 @@
 import os
 
-from .exceptions import FiWareError
+from exceptions import FiWareError
 
 # FI-WARE Host and Operations
 FIWARE_IP = os.environ.get('FI_WARE_IP')
@@ -32,6 +32,9 @@ API_ROUTES      = get_ost_api('routes',     OST_API_KEY)
 API_STOPS       = get_ost_api('stops',      OST_API_KEY)
 API_TRIPS       = get_ost_api('trips',      OST_API_KEY)
 API_STOPTIMES   = get_ost_api('stoptimes',  OST_API_KEY)
+
+AGENCY_QUERY = '&agency=%s'
+ROUTE_QUERY = '&route=%s'
 
 # GTFS Constants
 CP_NAME  = 'CP - Comboios de Portugal'
