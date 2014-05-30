@@ -136,8 +136,5 @@ class FiWare(object):
             response = requests.post(api_url, data=json_content, headers=headers)
             all_ok, response_content = self.handle_response(response)
             if not all_ok:
-                # print json_content
-                # print '\n\n\n'
-                # print response_content
-                message = '%s update unsuccessful.\n\n%s' % content_type, response_content
+                message = '%s update unsuccessful.\n\n%s' % (content_type, simplejson.dumps(response_content))
                 raise FiWareError( message )

@@ -101,7 +101,8 @@ class Crawler(object):
                 # Iterate over the API's pages
                 request = requests.get(api_url)
                 response, meta = self.parse_response(request)
-                elements.append(response)
+                if len(response) > 0:
+                    elements.append(response)
                 # Append ?next_page attribute to URL
                 if meta.get('next_page'):
                     api_url = OST_API_MAIN_URL + meta['next_page']
