@@ -1,6 +1,10 @@
+#!/usr/bin/env python
+# encoding: utf-8
 import os
+import socket
 
 from exceptions import FiWareError
+
 
 # FI-WARE Host and Operations
 FIWARE_IP = os.environ.get('FI_WARE_IP')
@@ -44,3 +48,14 @@ TRIP     = 'Trip'
 STOP     = 'Stop'
 STOPTIME = 'StopTime'
 ID       = 'id'
+
+
+# RabbitMQ & Celery
+if socket.gethostname().endswith('ost.pt'):
+    MQ_HOST     = os.environ.get('MQ_HOST_PROD')
+else:
+    MQ_HOST     = os.environ.get('MQ_HOST_TEST')
+MQ_USER     = os.environ.get('MQ_USER')
+MQ_PASSWORD = os.environ.get('MQ_PASSWORD')
+MQ_VHOST    = os.environ.get('MQ_VHOST')
+
