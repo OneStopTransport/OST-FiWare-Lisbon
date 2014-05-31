@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+# encoding: utf-8
 class APIKeyError(Exception):
     def __str__(self):
         return 'APIKeyError'

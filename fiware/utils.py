@@ -1,4 +1,7 @@
+#!/usr/bin/env python
+# encoding: utf-8
 from colorama   import Fore
+
 
 def get_error_message(error):
     """ Generic method for pretty printing an error message when crawler/updater fails """
