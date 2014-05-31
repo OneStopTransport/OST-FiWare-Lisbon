@@ -17,9 +17,7 @@ This is a Python project that can be run as a [Celery](http://www.celeryproject.
 
 #### "Should I use a virtual environment?"
 
-**YES**.
-
-It's strongly recommended to use a [virtual environment tool](http://en.wikipedia.org/wiki/Virtual_environment_software) to control the libraries' versions. We suggest **[pyenv](https://github.com/yyuu/pyenv)** with **[pyenv-virtualenv](https://github.com/yyuu/pyenv-virtualenv)**, but other solutions may suit you.
+**YES**. It's strongly recommended to use a [virtual environment tool](http://en.wikipedia.org/wiki/Virtual_environment_software) to control the libraries' versions. We suggest **[pyenv](https://github.com/yyuu/pyenv)** with **[pyenv-virtualenv](https://github.com/yyuu/pyenv-virtualenv)**, but other solutions may suit you.
 
 #### Installation
 
@@ -69,7 +67,7 @@ export MQ_VHOST="/"
 
 There are two procedures, one if you'll use this as a regular Python project or as a periodic [Celery Beat worker](http://docs.celeryproject.org/en/latest/userguide/periodic-tasks.html).
 
-##### Regular Python project
+#### - Regular Python project
 
 Just run the following on the project's directory (fi-ware-lisbon):
 
@@ -77,7 +75,7 @@ Just run the following on the project's directory (fi-ware-lisbon):
 python -m fiware.tasks
 ```
 
-#### Celery Beat 
+#### - Celery Beat 
 
 Just run the following on the project's directory (fi-ware-lisbon):
 
