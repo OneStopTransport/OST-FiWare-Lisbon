@@ -7,21 +7,24 @@ from exceptions import FiWareError
 
 
 # FI-WARE Host and Operations
-FIWARE_IP = os.environ.get('FI_WARE_IP')
+FIWARE_HOST = os.environ.get('FIWARE_HOST')
 
 def get_fiware_api(update=False):
-    if not FIWARE_IP:
-        raise FiWareError('No Fi-Ware IP')
+    global FIWARE_HOST
+    if not FIWARE_HOST:
+        raise FiWareError('No Fi-Ware Host')
+    if 'http://' not in FIWARE_HOST:
+        FIWARE_HOST = 'http://' + FIWARE_HOST
     if update:
-        return 'http://' + FIWARE_IP + '/ngsi10/updateContext'   
-    return 'http://' + FIWARE_IP + '/ngsi10/queryContext'
+        return FIWARE_HOST + '/ngsi10/updateContext'   
+    return FIWARE_HOST + '/ngsi10/queryContext'
     
 FIWARE_GOOD_STATUS = {
     'code' : '200',
     'reasonPhrase' : 'OK'
 }
 
-# OST API URLs and API Key
+# OST API URLs and API Key  
 OST_API_MAIN_URL = 'https://api.ost.pt/'
 OST_API_KEY = os.environ.get('OST_SERVER_KEY')
 

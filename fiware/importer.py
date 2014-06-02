@@ -140,3 +140,5 @@ class FiWare(object):
             if not all_ok:
                 message = '%s update unsuccessful.\n\n%s' % (content_type, simplejson.dumps(response_content))
                 raise FiWareError( message )
+            return all_ok, response_content
+    

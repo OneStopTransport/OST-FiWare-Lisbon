@@ -45,13 +45,15 @@ As stated before, this project fetches data from OST and inserts it into a Conte
 
 #### Environment variables
 
-For security reasons, all the confidential data (such as the API Key or the Context Broker IP) were not added to the project's repository. They're retrieved from the system's environment. If you'll be running this project on an Unix system, you can the put the following lines on the `~/.exports` file or in one of the following: `~/.bash_profile`, `~/.bashrc` or `~/.profile`:
+For security reasons, all the confidential data (such as the API Key or the Context Broker Host) were not added to the project's repository, since they're retrieved from the system's environment. If you'll be running this project on an Unix system, you can the put the following lines on the `~/.exports` file or in one of the following: `~/.bash_profile`, `~/.bashrc` or `~/.profile`:
 
 ```
 # One.Stop.Transport API Keys 
 export OST_SERVER_KEY="<INSERT_API_KEY_HERE>"
-export FI_WARE_IP="<INSERT_FIWARE_IP_HERE>"
+export FIWARE_HOST="<INSERT_CONTEXTBROKER_IP_HERE>"
 ```
+
+`FIWARE_HOST` can be an IP address or an URL, but don't forget the 1026 port, which is needed for the ContextBroker operations.
 
 If you'll be running this as a [Celery](http://www.celeryproject.org/) worker, you'll need this too:
 ```
