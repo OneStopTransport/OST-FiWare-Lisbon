@@ -1,8 +1,9 @@
-# FI-WARE Lisbon use case
+Python connector between One.Stop.Transport and FI-WARE Orion Context Broker
+
+
+## FI-WARE Lisbon use case
 
 Integration project between [One.Stop.Transport](https://ost.pt) and [FI-WARE](http://fi-ware.org). This application fetches GTFS data from One.Stop.Transport's [APIs](https://developer.ost.pt/api-explorer/) and inserts it into an [Orion Context Broker](http://catalogue.fi-ware.org/enablers/configuration-manager-orion-context-broker) instance.
-
-Currently under development, some documentation about it is on the project's [wiki](https://git.tice.ipn.pt/rvitorino/fi-ware-lisbon/wikis/home). It is currently written in portuguese, though.
 
 ---
 
@@ -91,4 +92,5 @@ And it will transfer the data at 6:30 AM every day!
 
 ## Issues
 
-Having issues or questions? Just leave an issue on this repository and we'll see what we can to help you out!
+Having issues or questions? Just leave an [issue on this repository](https://github.com/OneStopTransport/Orion-Context-Broker-Exporter/issues) and we'll see what we can do to help you out!
+
