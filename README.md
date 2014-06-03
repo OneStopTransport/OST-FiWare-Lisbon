@@ -40,7 +40,7 @@ As stated before, this project fetches data from OST and inserts it into a Conte
 
 - [OST](https://www.ost.pt) developer account (Sign up > Login > Settings > Developer Settings) ;
 - [OST Server API Key](https://github.com/OneStopTransport/OneStopTransport/wiki/Autenticac%CC%A7a%CC%83o-por-chave);
-- [Orion Context Broker](http://catalogue.fi-ware.org/enablers/configuration-manager-orion-context-broker) instance running on FI-WARE with a public IP (check the [wiki](https://git.tice.ipn.pt/rvitorino/fi-ware-lisbon/wikis/home) for details);
+- [Orion Context Broker](http://catalogue.fi-ware.org/enablers/configuration-manager-orion-context-broker) instance running on FI-WARE with a public IP (check the [documentation](http://catalogue.fi-ware.org/enablers/publishsubscribe-context-broker-orion-context-broker/documentation) for details);
 - [RabbitMQ](http://www.rabbitmq.com/) instance if you want this being run as a [Celery Beat Worker](http://docs.celeryproject.org/en/latest/userguide/periodic-tasks.html);
 
 
@@ -54,7 +54,7 @@ export OST_SERVER_KEY="<INSERT_API_KEY_HERE>"
 export FIWARE_HOST="<INSERT_CONTEXTBROKER_IP_HERE>"
 ```
 
-`FIWARE_HOST` can be an IP address or an URL, but don't forget the 1026 port, which is needed for the ContextBroker operations.
+`FIWARE_HOST` can be an IP address or an URL, but **don't forget** the `http://` protocol and the `1026` port, or else the ContextBroker operations will not work.
 
 If you'll be running this as a [Celery](http://www.celeryproject.org/) worker, you'll need this too:
 ```
