@@ -22,7 +22,8 @@ from utils      import get_error_message
 @task(name='transfer_gtfs', ignore_result=True)
 def transfer_gtfs(agency_name=None):
     """
-      Fetch CP data from OST APIs and put them on ContextBroker
+      Fetches CP data from OST APIs and puts it on ContextBroker
+      Uses the Crawler to fetch data and FiWare to import it.
       # 1st) Agency == CP
       # 2nd) CP Routes
       # 3rd) CP Stops
@@ -30,44 +31,43 @@ def transfer_gtfs(agency_name=None):
       # 5th) CP StopTimes
     """
     try:
-        # Instantiate the OST Crawler
         crawler = Crawler()
-        # And the FiWare data inserter
         fiware = FiWare()
-        # Validate agency_name attribute
-        if not agency_name:
+        if agency_name is None:
             agency_name = CP_NAME
-        # Get Data from OST and put into ContextBroker
         print '> Inserting Agency...   ',
         agency = crawler.get_agency(agency_name)
         agency_id = agency.get(ID)
         fiware.insert_data(agency, content_type=AGENCY)
         print 'Done.'
-        # Get routes with agency == CP
+        # ROUTES
         print '> Inserting Routes...   ',
         routes = crawler.get_data_by_agency(agency_id, content_type=ROUTE)
         fiware.insert_data(routes, content_type=ROUTE)
-        print 'Done:', len(fiware.get_data(content_type=ROUTE)['contextResponses'])
+        routes_cb = fiware.get_data(content_type=ROUTE)['contextResponses']
+        print 'Done:', len(routes_cb)
+        # STOPS
         print '> Inserting Stops...    ',
-        # Get trips which route ID is on the routes list
         stops = crawler.get_data_by_agency(agency_id, content_type=STOP)
         fiware.insert_data(stops, content_type=STOP)
-        print 'Done:', len(fiware.get_data(content_type=STOP)['contextResponses'])
-        # Get route IDs
+        stops_cb = fiware.get_data(content_type=STOP)['contextResponses']
+        print 'Done:', len(stops_cb)
+        # TRIPS
         route_ids = fiware.get_ids(fiware.get_data(content_type=ROUTE))
         print '> Inserting Trips...    ',
-        # Get trips which route ID is on the routes list
         trips = crawler.get_data_from_routes(route_ids, content_type=TRIP)
         fiware.insert_data(trips, content_type=TRIP)
-        print 'Done:', len(fiware.get_data(content_type=TRIP)['contextResponses'])
+        trips_cb = fiware.get_data(content_type=TRIP)['contextResponses']
+        print 'Done:', len(trips_cb)
+        # STOPTIMES
         print '> Inserting StopTimes...',
-        # Get stoptimes which route ID is on the routes list
-        stoptimes = crawler.get_data_from_routes(route_ids, content_type=STOPTIME)
-        fiware.insert_data(stoptimes, content_type=STOPTIME)
-        print 'Done:', len(fiware.get_data(content_type=STOPTIME)['contextResponses'])
+        times = crawler.get_data_from_routes(route_ids, content_type=STOPTIME)
+        fiware.insert_data(times, content_type=STOPTIME)
+        times_cb = fiware.get_data(content_type=STOPTIME)['contextResponses']
+        print 'Done:', len(times_cb)
     except (APIKeyError, CrawlerError, OSTError, FiWareError) as error:
         message = get_error_message(error)
         print(Fore.RED + str(error) + Fore.RESET + ':' + message)
-        
+
 if __name__ == '__main__':
     transfer_gtfs()
