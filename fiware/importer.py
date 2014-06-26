@@ -5,11 +5,12 @@ import simplejson
 
 from constants  import get_fiware_api
 from constants  import FIWARE_GOOD_STATUS
-from exceptions import FiWareError
+from errors     import FiWareError
 
 
 class FiWare(object):
     """ Helper to insert CP data into Context Broker """
+
     def wrap_content(self, content, content_type):
         """
           ContextBroker requires a specific JSON schema

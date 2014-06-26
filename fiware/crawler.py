@@ -13,13 +13,14 @@ from constants  import OST_API_MAIN_URL
 from constants  import ROUTE
 from constants  import ROUTE_QUERY
 from constants  import TRIP
-from exceptions import APIKeyError
-from exceptions import CrawlerError
-from exceptions import OSTError
+from errors import APIKeyError
+from errors import CrawlerError
+from errors import OSTError
 
 
 class Crawler(object):
     """ Crawler to retrieve CP data from OST APIs """
+
     def validate_key(self, url):
         """
           Checks if URL contains a key or not.

@@ -11,10 +11,10 @@ from constants  import TRIP
 from constants  import STOPTIME
 from constants  import ID
 from crawler    import Crawler
-from exceptions import APIKeyError
-from exceptions import CrawlerError
-from exceptions import OSTError
-from exceptions import FiWareError
+from errors     import APIKeyError
+from errors     import CrawlerError
+from errors     import OSTError
+from errors     import FiWareError
 from importer   import FiWare
 from utils      import get_error_message
 

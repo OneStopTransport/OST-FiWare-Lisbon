@@ -3,11 +3,12 @@
 import os
 import socket
 
-from exceptions import FiWareError
+from errors import FiWareError
 
 
 # FI-WARE Host and Operations
 FIWARE_HOST = os.environ.get('FIWARE_HOST')
+
 
 def get_fiware_api(update=False):
     global FIWARE_HOST
