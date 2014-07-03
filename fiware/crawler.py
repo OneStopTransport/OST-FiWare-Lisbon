@@ -3,16 +3,16 @@
 import requests
 import simplejson
 
-from constants  import AGENCY_QUERY
-from constants  import API_AGENCIES
-from constants  import API_ROUTES
-from constants  import API_STOPS
-from constants  import API_TRIPS
-from constants  import API_STOPTIMES
-from constants  import OST_API_MAIN_URL
-from constants  import ROUTE
-from constants  import ROUTE_QUERY
-from constants  import TRIP
+from constants import AGENCY_QUERY
+from constants import API_AGENCIES
+from constants import API_ROUTES
+from constants import API_STOPS
+from constants import API_TRIPS
+from constants import API_STOPTIMES
+from constants import OST_API_MAIN_URL
+from constants import ROUTE
+from constants import ROUTE_QUERY
+from constants import TRIP
 from errors import APIKeyError
 from errors import CrawlerError
 from errors import OSTError
@@ -21,14 +21,14 @@ from errors import OSTError
 class Crawler(object):
     """ Crawler to retrieve CP data from OST APIs """
 
-    def validate_key(self, url):
+    @staticmethod
+    def validate_key(url):
         """
           Checks if URL contains a key or not.
           If not raises an exception (CrawlerError).
         """
         if '?key=' not in url:
             raise CrawlerError('URL without API Key: ' + url)
-            return False
         return True
 
     def parse_response(self, request):
@@ -38,10 +38,10 @@ class Crawler(object):
         """
         # Checks if OST is down for maintenance
         down_for_maintenance = request.status_code == 200 and \
-                               'Temporarily Down' in request.content
+            'Temporarily Down' in request.content
         if request.status_code == 200 and not down_for_maintenance:
             content = simplejson.loads(request.content)
-            return (content.get('Objects'), content.get('Meta'))
+            return content.get('Objects'), content.get('Meta'),
         elif request.status_code == 401:
             # HTTP 401 - Unauthorized
             raise APIKeyError('Invalid key')
@@ -73,7 +73,7 @@ class Crawler(object):
         elements = []
         are_elements_available = True
         api_url = (API_ROUTES if content_type == ROUTE else API_STOPS) \
-                + (AGENCY_QUERY % agency_id)
+            + (AGENCY_QUERY.format(agency_id=agency_id))
         while are_elements_available:
             # Iterate over the API's pages
             request = requests.get(api_url)
@@ -99,7 +99,7 @@ class Crawler(object):
         for route in routes_list:
             are_elements_available = True
             api_url = (API_TRIPS if content_type == TRIP else API_STOPTIMES) \
-                    + (ROUTE_QUERY % route)
+                + (ROUTE_QUERY.format(route_id=route))
             while are_elements_available:
                 # Iterate over the API's pages
                 request = requests.get(api_url)

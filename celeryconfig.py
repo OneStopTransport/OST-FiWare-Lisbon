@@ -1,16 +1,13 @@
 #!/usr/bin/env python
 # encoding: utf-8
-import socket
-from datetime import datetime
-from datetime import date
 from datetime import time
 
 from celery.schedules import crontab
 
-from fiware.constants import MQ_HOST
-from fiware.constants import MQ_USER
-from fiware.constants import MQ_PASSWORD
-from fiware.constants import MQ_VHOST
+from constants import MQ_HOST
+from constants import MQ_USER
+from constants import MQ_PASSWORD
+from constants import MQ_VHOST
 
 #
 # RABBIT-MQ CONFIG

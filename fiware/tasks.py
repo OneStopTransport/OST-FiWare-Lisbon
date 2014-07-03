@@ -1,26 +1,26 @@
 #!/usr/bin/env python
 # encoding: utf-8
 from celery.task import task
-from colorama    import Fore
+from colorama import Fore
 
-from constants  import CP_NAME
-from constants  import AGENCY
-from constants  import ROUTE
-from constants  import STOP
-from constants  import TRIP
-from constants  import STOPTIME
-from constants  import ID
-from crawler    import Crawler
-from errors     import APIKeyError
-from errors     import CrawlerError
-from errors     import OSTError
-from errors     import FiWareError
-from importer   import FiWare
-from utils      import get_error_message
+from constants import CP_NAME
+from constants import AGENCY
+from constants import ROUTE
+from constants import STOP
+from constants import TRIP
+from constants import STOPTIME
+from constants import ID
+from crawler import Crawler
+from errors import APIKeyError
+from errors import CrawlerError
+from errors import OSTError
+from errors import FiWareError
+from importer import FiWare
+from utils import get_error_message
 
 
-@task(name='transfer_gtfs', ignore_result=True)
-def transfer_gtfs(agency_name=None):
+@task(name='transfer_gtfs_cb', ignore_result=True)
+def transfer_gtfs_cb(agency_name=None):
     """
       Fetches CP data from OST APIs and puts it on ContextBroker
       Uses the Crawler to fetch data and FiWare to import it.
@@ -70,4 +70,4 @@ def transfer_gtfs(agency_name=None):
         print(Fore.RED + str(error) + Fore.RESET + ':' + message)
 
 if __name__ == '__main__':
-    transfer_gtfs()
+    transfer_gtfs_cb()
