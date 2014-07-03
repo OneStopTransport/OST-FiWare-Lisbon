@@ -1,6 +1,8 @@
 *.db
 .DS_Store
 */.DS_Store
+.idea/
+ckan/data
 
 
 # Byte-compiled / optimized / DLL files
