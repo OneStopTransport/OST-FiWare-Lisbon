@@ -1,0 +1,3 @@
+[submodule "ckan/datastore"]
+	path = ckan/datastore
+	url = git@github.com:rjfv/datastore-loader.git
