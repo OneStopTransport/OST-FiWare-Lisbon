@@ -8,6 +8,12 @@ class APIKeyError(Exception):
         return 'APIKeyError'
 
 
+class CKANError(Exception):
+
+    def __str__(self):
+        return 'CKANError'
+
+
 class CrawlerError(Exception):
 
     def __str__(self):
