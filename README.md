@@ -1,4 +1,4 @@
-Python connectors between One.Stop.Transport and FI-WARE (Orion Context Broker and CKAN).
+`Python` connectors between **One.Stop.Transport** and **FI-WARE** (Orion Context Broker and CKAN).
 
 
 ## FI-WARE Lisbon use case
