@@ -18,18 +18,35 @@ BROKER_URL = 'amqp://%s:%s@%s:5672/%s' % \
 #
 # CELERY CONFIG
 #
-BEAT_NAME = 'import_gtfs_to_fiware'
-BEAT_TIME = time(6, 30)
+BEAT_NAME_CB = 'import_gtfs_to_fiware'
+BEAT_TIME_CB = time(06, 00)
+BEAT_NAME_CKAN = 'import_gtfs_to_ckan'
+BEAT_TIME_CKAN = time(06, 30)
+
 BEAT_QUEUE = 'fiware_queue'
 
-CELERY_IMPORTS = ("fiware.tasks",)
-CELERYD_CONCURRENCY = 1
-CELERY_RESULT_BACKEND = "amqp"
+CELERY_IMPORTS = ('fiware.tasks', 'ckan.tasks',)
+CELERYD_CONCURRENCY = 2
+CELERY_RESULT_BACKEND = 'amqp'
 CELERY_TASK_RESULT_EXPIRES = 60 * 5
 CELERYBEAT_SCHEDULE = {
-    BEAT_NAME: {
-        'task': 'transfer_gtfs',
-        'schedule': crontab(hour=BEAT_TIME.hour, minute=BEAT_TIME.minute),
+    BEAT_NAME_CB: {
+        'task': 'transfer_gtfs_cb',
+        'schedule': crontab(
+            hour=BEAT_TIME_CB.hour,
+            minute=BEAT_TIME_CB.minute,
+        ),
+        'args': (),
+        'options': {
+            'queue': BEAT_QUEUE,
+        }
+    },
+    BEAT_NAME_CKAN: {
+        'task': 'transfer_gtfs_ckan',
+        'schedule': crontab(
+            hour=BEAT_TIME_CKAN.hour,
+            minute=BEAT_TIME_CKAN.minute,
+        ),
         'args': (),
         'options': {
             'queue': BEAT_QUEUE,
