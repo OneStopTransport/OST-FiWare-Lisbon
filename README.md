@@ -30,6 +30,9 @@ This is a Python project that can be run as [Celery](http://www.celeryproject.or
 After setting that up and creating a `virtualenv` for this project, install its libraries:
 
 ```
+git clone git@github.com:OneStopTransport/OST-FiWare-Lisbon.git
+cd OST-FiWare-Lisbon/
+git submodule update --init
 pip install -r requirements.pip
 ```
 
