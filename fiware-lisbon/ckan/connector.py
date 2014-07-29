@@ -35,7 +35,7 @@ class Connector(object):
         self.ckan = CkanClient(CKAN_HOST, CKAN_API_KEY)
 
     @staticmethod
-    def fetch_gtfs():
+    def fetch_full_gtfs():
         """
           Fetches the GTFS zip file from OST into the data folder,
           extracts the .txt files from the ZIP and removes the archive.
@@ -65,6 +65,17 @@ class Connector(object):
             gtfs_zip.extractall(CKAN_PWD)
         if os.path.exists(zip_path):
             os.remove(zip_path)
+
+    @staticmethod
+    def fetch_gtfs_stops():
+        """
+          Fetches the GTFS Stops of the given agencies
+        """
+    pass
+    
+    @staticmethod
+    def insert_stops_ckan():
+    pass
 
     def create_dataset(self):
         """ Creates the CKAN dataset we need """

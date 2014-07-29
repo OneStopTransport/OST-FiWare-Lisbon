@@ -6,18 +6,20 @@ import socket
 from utils import get_ost_api
 
 # CKAN API Key and URL
+# CKAN_API_KEY = os.environ.get('FULLIT_CKAN_API_KEY')
 CKAN_API_KEY = os.environ.get('CKAN_API_KEY')
 CKAN_AUTHORIZATION = {
     'content-type': 'application/x-www-form-urlencoded',
     'Authorization': CKAN_API_KEY,
 }
 
-CKAN_DATASET_NAME = 'fiware-gtfs-lisbon'
+CKAN_DATASET_NAME = 'fiware-cp-carris'
 CKAN_DATASET = {
     'name': CKAN_DATASET_NAME,
-    'notes': 'GTFS data about Comboios de Portugal for the ' +
-             'FI-WARE Lisbon case',
+    'notes': 'GTFS data about Comboios de Portugal and Carris ' +
+             'for the FI-WARE Lisbon case',
 }
+# CKAN_HOST = os.environ.get('FULLIT_CKAN_HOST')
 CKAN_HOST = os.environ.get('CKAN_HOST')
 CKAN_PWD = 'ckan/data/'
 
@@ -44,7 +46,7 @@ GTFS_EXTENSION = '.txt'
 # OST API URLs and API Key
 OST_API_MAIN_URL = 'https://api.ost.pt/'
 OST_API_KEY = os.environ.get('OST_SERVER_KEY')
-OST_GTFS_PARAMS = {'publisher_name': 'ComboiosPortugal'}
+OST_GTFS_PARAMS = {'publisher_name': 'ComboiosPortugal,Carris'}
 
 # GTFS APIs
 API_AGENCIES = get_ost_api(OST_API_MAIN_URL, 'agencies', OST_API_KEY)

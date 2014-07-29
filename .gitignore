@@ -2,7 +2,7 @@
 .DS_Store
 */.DS_Store
 .idea/
-ckan/data
+fiware-lisbon/ckan/data
 
 
 # Byte-compiled / optimized / DLL files
