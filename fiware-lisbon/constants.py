@@ -13,15 +13,22 @@ CKAN_AUTHORIZATION = {
     'Authorization': CKAN_API_KEY,
 }
 
-CKAN_DATASET_NAME = 'fiware-cp-carris'
+CKAN_DATASET_NAME = 'final-fiware-lisbon-case'
 CKAN_DATASET = {
     'name': CKAN_DATASET_NAME,
-    'notes': 'GTFS data about Comboios de Portugal and Carris ' +
-             'for the FI-WARE Lisbon case',
+    'notes': 'Lisbon Places from OST, CitySDK and MyNeighbourhood'
 }
+CKAN_RESOURCE_NAME = 'FiwarePlace'
 # CKAN_HOST = os.environ.get('FULLIT_CKAN_HOST')
 CKAN_HOST = os.environ.get('CKAN_HOST')
 CKAN_PWD = 'ckan/data/'
+
+# MyNeighbourhood constants
+JSON = 'json'
+BUS = 'Bus'
+TRAIN = 'Train'
+PLACE_BODY = '{} {} station called {}'
+TRANSPORTATION_CATEGORY = 'Transportation'
 
 # FI-WARE Host and Status
 FIWARE_HOST = os.environ.get('FIWARE_HOST')
@@ -61,6 +68,9 @@ ROUTE_QUERY = '&route={route_id}'
 
 # GTFS Constants
 CP_NAME = 'CP - Comboios de Portugal'
+CP_URL = 'http://www.cp.pt'
+CARRIS_NAME = 'CARRIS'
+CARRIS_URL = 'http://www.carris.pt'
 AGENCY = 'Agency'
 ROUTE = 'Route'
 TRIP = 'Trip'

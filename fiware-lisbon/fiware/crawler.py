@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # encoding: utf-8
+import logging
 import requests
 import simplejson
 
@@ -20,6 +21,10 @@ from errors import OSTError
 
 class Crawler(object):
     """ Crawler to retrieve CP data from OST APIs """
+    
+    def __init__(self):
+        requests_log = logging.getLogger("requests")
+        requests_log.setLevel(logging.WARNING)
 
     @staticmethod
     def validate_key(url):

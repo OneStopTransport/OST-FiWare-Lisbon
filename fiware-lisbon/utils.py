@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # encoding: utf-8
+from itertools import izip_longest
 import os
 
 from colorama import Fore
@@ -19,11 +20,27 @@ CKAN_URLS = {
 }
 
 
+def grouper(iterable, n, fillvalue=None):
+    """ Collect data into fixed-length chunks or blocks """
+    # grouper('ABCDEFG', 3, 'x') --> ABC DEF Gxx
+    args = [iter(iterable)] * n
+    return izip_longest(fillvalue=fillvalue, *args)
+
+
 def get_file_path(file_name, file_ext):
-    """docstring for get_file_path"""
+    """ Returns the file directory of a data file """
     file_header = 'file://'
     data_dir = ''.join([os.getcwd(), '/ckan/data/'])
     return ''.join([file_header, data_dir, file_name, file_ext])
+
+
+def get_extension(file_format):
+    """ Returns the file extension of a given format """
+    from constants import GTFS_EXTENSION
+    if file_format:
+        file_format = file_format.replace('.', '')
+        return ''.join(('.', file_format.lower()))
+    return GTFS_EXTENSION
 
 
 def get_ckan_api(ckan_host, ckan_type, ckan_action):
