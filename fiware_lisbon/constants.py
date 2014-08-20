@@ -6,21 +6,21 @@ import socket
 from utils import get_ost_api
 
 # CKAN API Key and URL
-# CKAN_API_KEY = os.environ.get('FULLIT_CKAN_API_KEY')
-CKAN_API_KEY = os.environ.get('CKAN_API_KEY')
+CKAN_API_KEY = os.environ.get('FULLIT_CKAN_API_KEY')
+# CKAN_API_KEY = os.environ.get('CKAN_API_KEY')
 CKAN_AUTHORIZATION = {
     'content-type': 'application/x-www-form-urlencoded',
     'Authorization': CKAN_API_KEY,
 }
 
-CKAN_DATASET_NAME = 'final-fiware-lisbon-case'
+CKAN_DATASET_NAME = 'fiware-lisbon-case'
 CKAN_DATASET = {
     'name': CKAN_DATASET_NAME,
     'notes': 'Lisbon Places from OST, CitySDK and MyNeighbourhood'
 }
 CKAN_RESOURCE_NAME = 'FiwarePlace'
-# CKAN_HOST = os.environ.get('FULLIT_CKAN_HOST')
-CKAN_HOST = os.environ.get('CKAN_HOST')
+CKAN_HOST = os.environ.get('FULLIT_CKAN_HOST')
+# CKAN_HOST = os.environ.get('CKAN_HOST')
 CKAN_PWD = 'ckan/data/'
 
 # MyNeighbourhood constants

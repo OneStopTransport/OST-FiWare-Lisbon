@@ -1,20 +1,18 @@
-from string import capwords
-from zipfile import ZipFile
 import csv
 import json
 import os
-import sys
-import time
+from string import capwords
+from zipfile import ZipFile
 
-from colorama import Fore
-from geopy.geocoders import Nominatim
 import requests
 import simplejson
-
+from colorama import Fore
 from datastore.ckan_client import CkanClient
 from datastore.ckan_client import CkanAccessDenied
 from datastore.ckan_client import CkanNotFound
 from datastore.datastore_loader import upload_resource_to_datastore
+from geopy.geocoders import GoogleV3
+
 from constants import BUS
 from constants import TRAIN
 from constants import JSON
@@ -37,11 +35,10 @@ from constants import OST_GTFS_PARAMS
 from constants import STOP
 from constants import TRANSPORTATION_CATEGORY
 from errors import CKANError
-from fiware.crawler import Crawler
+from fiware_lisbon.fiware.crawler import Crawler
 from utils import get_ckan_api
 from utils import get_ckan_error
 from utils import get_extension
-from utils import get_file_path
 from utils import get_ost_api
 from utils import get_string_type
 from utils import grouper
@@ -52,8 +49,9 @@ class Connector(object):
 
     def __init__(self):
         self.ckan = CkanClient(CKAN_HOST, CKAN_API_KEY)
-        reload(sys)
-        sys.setdefaultencoding('utf-8')
+        self.places_list = []
+        self.cp_stops = []
+        self.carris_stops = []
 
     @staticmethod
     def fetch_full_gtfs():
@@ -95,10 +93,10 @@ class Connector(object):
         cp_id = crawler.get_agency(CP_NAME).get('id')
         carris_id = crawler.get_agency(CARRIS_NAME).get('id')
         self.cp_stops = crawler.get_data_by_agency(cp_id, STOP)
-        # self.carris_stops = crawler.get_data_by_agency(carris_id, STOP)
+        self.carris_stops = crawler.get_data_by_agency(carris_id, STOP)
         print "{} @ CP and {} @ CARRIS".format(
             len(self.cp_stops),
-            0 # len(self.carris_stops),
+            len(self.carris_stops),
         )
 
     def create_dataset(self):
@@ -123,12 +121,10 @@ class Connector(object):
         """
         try:
             print "> Creating resource {}".format(resource_name)
-            extension = get_extension(resource_format)
-            file_path = get_file_path(resource_name, extension)
             resource = {
                 'package_id': self.get_dataset()['id'],
                 'name': resource_name,
-                'url': file_path,
+                'url': OST_API_MAIN_URL,
                 'format': resource_format if resource_format else 'csv',
                 'force': True,
             }
@@ -220,9 +216,11 @@ class Connector(object):
         for txt_file in files:
             os.remove(os.path.join(CKAN_PWD, txt_file))
 
-    def push_stops_to_ckan(self, stops_list, is_cp, resource_id):
+    @staticmethod
+    def push_stops_to_ckan(stops_list, is_cp, resource_id):
         """ Writes all the stops to a file to be pushed to DataStore """
-        geolocator = Nominatim()
+        google_api_key = os.environ.get('GOOGLE_SERVER_KEY')
+        geolocator = GoogleV3(api_key=google_api_key)
         # Needed variables for the places' description
         agency_name = CP_NAME if is_cp else CARRIS_NAME
         transport = TRAIN if is_cp else BUS
@@ -254,9 +252,10 @@ class Connector(object):
                     whereat = requests.get(api_url)
                     whereat = json.loads(whereat.content) if whereat.status_code == 200 else {}
                     parish = whereat.get('parish', {})
-                    # Get the Address from coordinates with Nominatim
-                    location = geolocator.reverse(coords, timeout=2)
-                    address = location.raw['address']
+                    municipality = whereat.get('municipality', {})
+                    # Get the Address from coordinates with GoogleMaps API
+                    location = geolocator.reverse(coords, exactly_one=True)
+                    address = location.address
                     place_name = capwords(stop['stop_name'])            
                     body = PLACE_BODY.format(agency_name, transport, place_name)
                     # Create a JSON list to be written to file
@@ -270,13 +269,13 @@ class Connector(object):
                     place['field_phone'] = ''
                     place['field_location_latitude'] = coords[0]
                     place['field_location_longitude'] = coords[1]
-                    place['field_location_address_line_1'] = location.raw.get('display_name').replace(';', ' ')
+                    place['field_location_address_line_1'] = location.address
+                    # Previously location.raw.get('display_name').replace(';', ' ')
                     place['field_location_address_line_2'] = ''
-                    place['field_location_city'] = address['city'] if address.get('city') else address.get('town', '')
+                    place['field_location_city'] = municipality.get('name', '') if municipality else ''
                     place['field_location_country'] = address.get('country', 'Portugal')
                     place['resource_id'] = resource_id
                     stop_places.append(place)
-                    # one second sleep because of Nominatim usage limits
             records = {
                 'resource_id': resource_id,
                 'records': stop_places,
