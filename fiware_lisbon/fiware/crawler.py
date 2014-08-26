@@ -67,7 +67,7 @@ class Crawler(object):
         response, meta = self.parse_response(request)
         return response[0] if response else None
 
-    def get_data_by_agency(self, agency_id, content_type):
+    def get_data_by_agency(self, agency_id, content_type, extra_params=None):
         """
           Gets all routes belonging to an agency.
         """
@@ -79,6 +79,9 @@ class Crawler(object):
         are_elements_available = True
         api_url = (API_ROUTES if content_type == ROUTE else API_STOPS) \
             + (AGENCY_QUERY.format(agency_id=agency_id))
+        if extra_params:
+            for key, value in extra_params.iteritems():
+                api_url = api_url + '&{}={}'.format(key, value)
         while are_elements_available:
             # Iterate over the API's pages
             request = requests.get(api_url)

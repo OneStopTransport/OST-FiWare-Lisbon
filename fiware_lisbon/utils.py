@@ -27,10 +27,10 @@ def grouper(iterable, n, fillvalue=None):
     return izip_longest(fillvalue=fillvalue, *args)
 
 
-def get_file_path(file_name, file_ext):
+def get_file_path(dataset_name, file_name, file_ext):
     """ Returns the file directory of a data file """
     file_header = 'file://'
-    data_dir = ''.join([os.getcwd(), '/ckan/data/'])
+    data_dir = ''.join([os.getcwd(), '/ckan/data/', dataset_name, '/'])
     return ''.join([file_header, data_dir, file_name, file_ext])
 
 

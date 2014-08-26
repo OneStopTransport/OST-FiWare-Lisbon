@@ -84,7 +84,7 @@ There are two procedures, one if you'll use this as a regular Python project or 
 
 #### - Regular Python project
 
-Just run the following on the project's directory (fi-ware-lisbon):
+Just run the following on the project's directory (`fiware_lisbon`):
 
 ```
 python -m fiware.tasks	# to import GTFS data to ContextBroker

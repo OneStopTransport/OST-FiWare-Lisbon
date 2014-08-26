@@ -5,23 +5,39 @@ import socket
 
 from utils import get_ost_api
 
+##########################################################################
+###################     CKAN AND MYNEIGHBOURHOOD     #####################
+##########################################################################
+
 # CKAN API Key and URL
-CKAN_API_KEY = os.environ.get('FULLIT_CKAN_API_KEY')
-# CKAN_API_KEY = os.environ.get('CKAN_API_KEY')
+CKAN_API_KEY = os.environ.get('CKAN_API_KEY')
 CKAN_AUTHORIZATION = {
     'content-type': 'application/x-www-form-urlencoded',
     'Authorization': CKAN_API_KEY,
 }
+CKAN_HOST = os.environ.get('CKAN_HOST')
+CKAN_PWD = 'ckan/data/'
 
+# CKAN Datasets
+# MyNeighbourhood Places - OST Stops as POIs
+CKAN_RESOURCE_NAME = 'FiwarePlace'
 CKAN_DATASET_NAME = 'fiware-lisbon-case'
 CKAN_DATASET = {
     'name': CKAN_DATASET_NAME,
     'notes': 'Lisbon Places from OST, CitySDK and MyNeighbourhood'
 }
-CKAN_RESOURCE_NAME = 'FiwarePlace'
-CKAN_HOST = os.environ.get('FULLIT_CKAN_HOST')
-# CKAN_HOST = os.environ.get('CKAN_HOST')
-CKAN_PWD = 'ckan/data/'
+# Carris Dataset - Carris Stops as POIs
+CKAN_CARRIS_DATASET_NAME = 'fiware-gtfs-carris'
+CKAN_CARRIS_DATASET = {
+    'name': CKAN_CARRIS_DATASET_NAME,
+    'notes': 'GTFS for Carris'
+}
+# CP Dataset - CP Stops as POIs
+CKAN_CP_DATASET_NAME = 'fiware-gtfs-cp'
+CKAN_CP_DATASET = {
+    'name': CKAN_CP_DATASET_NAME,
+    'notes': 'GTFS for CP'
+}
 
 # MyNeighbourhood constants
 JSON = 'json'
@@ -30,6 +46,10 @@ TRAIN = 'Train'
 PLACE_BODY = '{} {} station called {}'
 TRANSPORTATION_CATEGORY = 'Transportation'
 
+##########################################################################
+########################     FIWARE AND OST     ##########################
+##########################################################################
+
 # FI-WARE Host and Status
 FIWARE_HOST = os.environ.get('FIWARE_HOST')
 FIWARE_GOOD_STATUS = {
@@ -37,6 +57,7 @@ FIWARE_GOOD_STATUS = {
     'reasonPhrase': 'OK',
 }
 
+# 
 GTFS_RESOURCES = {
     'agency',
     'calendar_dates',
@@ -53,7 +74,13 @@ GTFS_EXTENSION = '.txt'
 # OST API URLs and API Key
 OST_API_MAIN_URL = 'https://api.ost.pt/'
 OST_API_KEY = os.environ.get('OST_SERVER_KEY')
-OST_GTFS_PARAMS = {'publisher_name': 'ComboiosPortugal,Carris'}
+OST_GTFS_PARAMS_CARRIS = {'publisher_name': 'Carris'}
+OST_GTFS_PARAMS_CP = {'publisher_name': 'ComboiosPortugal'}
+
+DATASETS_NAMES = {
+    OST_GTFS_PARAMS_CARRIS['publisher_name']: CKAN_CARRIS_DATASET_NAME,
+    OST_GTFS_PARAMS_CP['publisher_name']: CKAN_CP_DATASET_NAME,
+}
 
 # GTFS APIs
 API_AGENCIES = get_ost_api(OST_API_MAIN_URL, 'agencies', OST_API_KEY)
@@ -66,11 +93,15 @@ API_STOPTIMES = get_ost_api(OST_API_MAIN_URL, 'stoptimes', OST_API_KEY)
 AGENCY_QUERY = '&agency={agency_id}'
 ROUTE_QUERY = '&route={route_id}'
 
-# GTFS Constants
+# GTFS Constants - CP and CARRIS
 CP_NAME = 'CP - Comboios de Portugal'
 CP_URL = 'http://www.cp.pt'
+CP_OST_PARAMS = {'publisher_name': 'ComboiosPortugal'}
 CARRIS_NAME = 'CARRIS'
 CARRIS_URL = 'http://www.carris.pt'
+CARRIS_OST_PARAMS = {'publisher_name': 'Carris'}
+
+# GTFS Variables  
 AGENCY = 'Agency'
 ROUTE = 'Route'
 TRIP = 'Trip'
@@ -78,7 +109,10 @@ STOP = 'Stop'
 STOPTIME = 'StopTime'
 ID = 'id'
 
-# RabbitMQ & Celery
+##########################################################################
+######################     RABBITMQ AND CELERY     #######################
+##########################################################################
+
 if socket.gethostname().endswith('ost.pt'):
     MQ_HOST = os.environ.get('MQ_HOST_PROD')
 else:
