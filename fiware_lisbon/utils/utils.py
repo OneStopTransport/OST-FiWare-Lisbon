@@ -37,7 +37,7 @@ def get_file_path(dataset_name, file_name, file_ext):
 
 def get_extension(file_format):
     """ Returns the file extension of a given format """
-    from utils.constants import GTFS_EXTENSION
+    from .constants import GTFS_EXTENSION
     if file_format:
         file_format = file_format.replace('.', '')
         return ''.join(('.', file_format.lower()))

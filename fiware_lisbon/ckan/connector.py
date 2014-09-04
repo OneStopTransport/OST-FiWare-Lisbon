@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+# encoding: utf-8
 import csv
 import json
 import os
@@ -15,7 +17,6 @@ from geopy.geocoders import GoogleV3
 from geopy.geocoders import Nominatim
 from geopy.exc import GeocoderTimedOut
 from geopy.exc import GeocoderQuotaExceeded
-
 
 # CKAN related
 from utils.constants import CKAN_API_KEY
@@ -73,7 +74,7 @@ class Connector(object):
         """
         api_params = (
             OST_GTFS_PARAMS_CARRIS,
-            OST_GTFS_PARAMS_CP
+            OST_GTFS_PARAMS_CP,
         )
         for parameter in api_params:
             api_url = get_ost_api(
@@ -114,7 +115,7 @@ class Connector(object):
         # Get stops contained in Lisbon district
         lisbon_box = {
             'corner1': '-9.50052660716588, 38.6731469051283',
-            'corner2': '-8.781861006420504, 39.31772866134264'
+            'corner2': '-8.781861006420504, 39.31772866134264',
         }
         self.cp_stops = crawler.get_data_by_agency(cp_id, STOP, lisbon_box)
         # Get all stops from Carris (all in Lisbon)
@@ -142,16 +143,22 @@ class Connector(object):
         """ Returns the GTFS dataset """
         return self.ckan.action('package_show', {'id': dataset['name']})
 
-    def create_resource(self, resource_name, dataset, resource_format=None, file_path=None):
+    def create_resource(self, resource_name, dataset, formato=None, path=None):
         """
           Creates the CKAN Resource (needed for the DataStore data upload)
         """
         try:
+            file_path = path
+            resource_format = formato
             print "> Creating resource {}".format(resource_name)
             if file_path is None:
                 extension = get_extension(resource_format)
-                file_path = get_file_path(dataset['name'], resource_name, extension)
-            print file_path
+                file_path = get_file_path(
+                    dataset['name'],
+                    resource_name,
+                    extension,
+                )
+            # print file_path
             resource = {
                 'package_id': self.get_dataset(dataset)['id'],
                 'name': resource_name,
@@ -199,13 +206,8 @@ class Connector(object):
         dataset_resources = {}
         for filename in sorted(GTFS_RESOURCES):
             resources = []
-            curr_file = ''.join([
-                CKAN_PWD,
-                dataset['name'],
-                '/',
-                filename,
-                GTFS_EXTENSION]
-            )
+            array = [CKAN_PWD, dataset['name'], '/', filename, GTFS_EXTENSION]
+            curr_file = ''.join(array)
             with open(curr_file, 'r') as csv_file:
                 reader = csv.DictReader(csv_file)
                 for row in reader:
@@ -251,7 +253,7 @@ class Connector(object):
         """ Removes all .txt files from data directory """
         gtfs_dir = ''.join([
             CKAN_PWD,
-            dataset['name']
+            dataset['name'],
         ])
         files = [f for f in os.listdir(gtfs_dir) if f.endswith('.txt')]
         for txt_file in files:
@@ -260,9 +262,10 @@ class Connector(object):
     @staticmethod
     def push_stops_to_ckan(stops_list, is_cp, resource_id):
         """ Pushes OST's GTFS Stops to CKAN Datastore in chunks of five """
-        google_api_keys = os.environ.get('GOOGLE_SERVER_KEYS').split(';')
-        google_api_index = 0
-        geolocator = GoogleV3(api_key=google_api_keys[google_api_index])
+        geolocators = []
+        geolocator_index = 0
+        geolocators.append(GoogleV3())
+        geolocators.append(Nominatim())
         # Needed variables for the places' description
         agency_name = CP_NAME if is_cp else CARRIS_NAME
         transport = TRAIN if is_cp else BUS
@@ -271,10 +274,12 @@ class Connector(object):
         api = get_ckan_api(
             ckan_host=CKAN_HOST,
             ckan_type='datastore',
-            ckan_action='create',
+            ckan_action='create',  # 'upsert',
         )
+        geolocator = geolocators[geolocator_index]
         for stop_group in grouper(stops_list, 5):
             stop_places = []
+            belem_tuple = (u'Santa Maria de Belém', u'São Francisco Xavier')
             for stop in stop_group:
                 location = None
                 is_able_to_continue = False
@@ -284,13 +289,12 @@ class Connector(object):
                         stop['point']['coordinates'][1],
                         stop['point']['coordinates'][0],
                     )
+                    coords_str = ','.join((str(coords[1]), str(coords[0])))
                     api_url = get_ost_api(
                         api=OST_API_MAIN_URL,
                         model_name='whereat',
                         api_key=OST_API_KEY,
-                        params={
-                            'coords': ','.join((str(coords[1]), str(coords[0])))
-                        },
+                        params={'coords': coords_str},
                     )
                     # Get the parish/neighbourhood from OST
                     whereat = requests.get(api_url)
@@ -303,55 +307,59 @@ class Connector(object):
                     # Get the Address from coordinates with GoogleMaps API
                     while is_able_to_continue is False:
                         try:
-                            location = geolocator.reverse(coords, exactly_one=True, timeout=60)
+                            location = geolocator.reverse(
+                                coords,
+                                exactly_one=True,
+                                timeout=60,
+                            )
                             is_able_to_continue = True
                         except GeocoderTimedOut as e:
                             print '>>>>>>>>>>>>>>> GeocoderTimedOut\n', e
                             location = None
                             print 'Moving on...\n\n'
                         except GeocoderQuotaExceeded as e:
-                            # TODO Google Geocoding usage isn't fetched by API
-                            # Key but by IP address so the thing to do is when
-                            # limit is reached change the Geocoding service
-                            # to Nominatim or something else. To be implemented
-                            # soon enough.
                             print '>>>>>>>>>>>>>>> GeocoderQuotaExceeded\n', e
-                            google_api_index += 1
-                            if google_api_index < len(google_api_keys):
-                                geolocator = GoogleV3(api_key=google_api_keys[google_api_index])
-                                print 'Trying a new key: {}...\n\n'.format(google_api_keys[google_api_index])
+                            geolocator_index += 1
+                            if geolocator_index < len(geolocators):
+                                geolocator = geolocators[geolocator_index]
+                                debug = 'Trying a new geocoder: {}...\n\n'
+                                print debug.format(type(geolocator).__name__)
                             else:
                                 print 'Oh noes, don\'t know what to do :(\n\n'
-                                google_api_index = 0
-                                geolocator = GoogleV3(api_key=google_api_keys[google_api_index])
+                                geolocator_index = 0
+                                geolocator = geolocators[geolocator_index]
                                 break
                     place_name = capwords(stop['stop_name'])
                     body = PLACE_BODY.format(
-                        agency_name, transport, place_name.encode('utf-8')
+                        agency_name, transport, place_name.encode('utf-8'),
                     )
                     # Create a JSON list to be written to file
+                    place['field_poi_id'] = stop['id']
                     place['field_title'] = place_name
                     place['field_category_places'] = TRANSPORTATION_CATEGORY
-                    place['body'] = body
-                    place['field_photographs'] = None
+                    place['field_body'] = body
+                    place['field_photographs'] = ""
                     place['field_website'] = agency_url
-                    place['field_email'] = ''
-                    place['field_phone'] = ''
+                    place['field_email'] = ""
+                    place['field_phone'] = ""
                     place['field_location_latitude'] = coords[0]
                     place['field_location_longitude'] = coords[1]
                     if parish:
-                        place['field_neighbourhood'] = parish.get('name', '')
+                        neighbourhood = parish.get('name', '')
+                        if neighbourhood in belem_tuple:
+                            neighbourhood = 'Belém'
+                        place['field_neighbourhood'] = neighbourhood
                     else:
                         place['field_neighbourhood'] = ''
                     if location:
                         # Previously:
                         #  location.raw.get('display_name').replace(';', ' ')
                         address = location.address
-                        place['field_location_address_line_1'] = address
+                        place['field_location_address_first_line'] = address
                     else:
-                        place['field_location_address_line_1'] = ''
+                        place['field_location_address_first_line'] = ''
 
-                    place['field_location_address_line_2'] = ''
+                    place['field_location_address_second_line'] = ''
                     if municipality:
                         municipality_name = municipality.get('name', '')
                         place['field_location_city'] = municipality_name
@@ -362,9 +370,12 @@ class Connector(object):
                     stop_places.append(place)
             records = {
                 'resource_id': resource_id,
+                'primary_key': ['field_poi_id'],
+                'indexes': ['field_poi_id'],
                 'records': stop_places,
-                'force': True
+                'force': True,
             }
+            # print records
             response = requests.post(
                 api,
                 data=simplejson.dumps(records),
@@ -395,10 +406,10 @@ class Connector(object):
                     resources_names = self.get_resources_names(each)
                     # Routine to import the entire GTFS to CKAN
                     gtfs_resources = self.get_gtfs_resources(each)
-                    for resource_name, resource_list in gtfs_resources.iteritems():
-                        if resource_name not in resources_names:
-                            self.create_resource(resource_name, each)
-                        resource = self.get_resource(resource_name, each)
+                    for name, resource_list in gtfs_resources.iteritems():
+                        if name not in resources_names:
+                            self.create_resource(name, each)
+                        resource = self.get_resource(name, each)
                         upload_resource_to_datastore(
                             resource=resource,
                             if_changed=False,
@@ -419,13 +430,11 @@ class Connector(object):
                 if CKAN_RESOURCE_NAME not in resources_names:
                     self.create_resource(
                         resource_name=CKAN_RESOURCE_NAME,
-                        resource_format=JSON,
+                        formato=JSON,
                         dataset=dataset,
-                        file_path='https://api.ost.pt/stops/'
+                        path='https://api.ost.pt/stops/',
                     )
                 resource = self.get_resource(CKAN_RESOURCE_NAME, dataset)
                 resource_id = resource.get('id')
-        
                 self.push_stops_to_ckan(self.cp_stops, True, resource_id)
                 self.push_stops_to_ckan(self.carris_stops, False, resource_id)
-
