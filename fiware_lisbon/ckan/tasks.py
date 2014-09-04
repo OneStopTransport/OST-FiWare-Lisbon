@@ -4,11 +4,11 @@ from celery.task import task
 from colorama import Fore
 
 from connector import Connector
-from errors import CKANError
-from errors import APIKeyError
-from errors import CrawlerError
-from errors import OSTError
-from utils import get_error_message
+from utils.errors import CKANError
+from utils.errors import APIKeyError
+from utils.errors import CrawlerError
+from utils.errors import OSTError
+from utils.utils import get_error_message
 
 
 @task(name='transfer_gtfs_ckan', ignore_result=True)

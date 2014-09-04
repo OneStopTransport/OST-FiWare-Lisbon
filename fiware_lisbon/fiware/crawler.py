@@ -1,22 +1,23 @@
 #!/usr/bin/env python
 # encoding: utf-8
 import logging
+
 import requests
 import simplejson
 
-from constants import AGENCY_QUERY
-from constants import API_AGENCIES
-from constants import API_ROUTES
-from constants import API_STOPS
-from constants import API_TRIPS
-from constants import API_STOPTIMES
-from constants import OST_API_MAIN_URL
-from constants import ROUTE
-from constants import ROUTE_QUERY
-from constants import TRIP
-from errors import APIKeyError
-from errors import CrawlerError
-from errors import OSTError
+from utils.constants import AGENCY_QUERY
+from utils.constants import API_AGENCIES
+from utils.constants import API_ROUTES
+from utils.constants import API_STOPS
+from utils.constants import API_TRIPS
+from utils.constants import API_STOPTIMES
+from utils.constants import OST_API_MAIN_URL
+from utils.constants import ROUTE
+from utils.constants import ROUTE_QUERY
+from utils.constants import TRIP
+from utils.errors import APIKeyError
+from utils.errors import CrawlerError
+from utils.errors import OSTError
 
 
 class Crawler(object):

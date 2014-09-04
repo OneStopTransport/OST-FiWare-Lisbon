@@ -3,7 +3,8 @@
 import os
 import socket
 
-from utils import get_ost_api
+from .utils import get_ost_api
+
 
 ##########################################################################
 ###################     CKAN AND MYNEIGHBOURHOOD     #####################
@@ -21,23 +22,87 @@ CKAN_PWD = 'ckan/data/'
 # CKAN Datasets
 # MyNeighbourhood Places - OST Stops as POIs
 CKAN_RESOURCE_NAME = 'FiwarePlace'
-CKAN_DATASET_NAME = 'fiware-lisbon-case'
+CKAN_DATASET_NAME = 'fiware-ost-lisbon-case'
 CKAN_DATASET = {
     'name': CKAN_DATASET_NAME,
-    'notes': 'Lisbon Places from OST, CitySDK and MyNeighbourhood'
+    'notes': 'Lisbon Places from OST (bus and train stops)',
 }
 # Carris Dataset - Carris Stops as POIs
 CKAN_CARRIS_DATASET_NAME = 'fiware-gtfs-carris'
 CKAN_CARRIS_DATASET = {
     'name': CKAN_CARRIS_DATASET_NAME,
-    'notes': 'GTFS for Carris'
+    'notes': 'GTFS for Carris',
 }
 # CP Dataset - CP Stops as POIs
 CKAN_CP_DATASET_NAME = 'fiware-gtfs-cp'
 CKAN_CP_DATASET = {
     'name': CKAN_CP_DATASET_NAME,
-    'notes': 'GTFS for CP'
+    'notes': 'GTFS for CP',
 }
+
+CKAN_DATASET_FIELDS = [
+    {
+        'id': 'field_poi_id',
+        'type': 'int',
+    },
+    {
+        'id': 'field_neighbourhood',
+        'type': 'text',
+    },
+    {
+        'id': 'field_title',
+        'type': 'text',
+    },
+    {
+        'id': 'field_category_places',
+        'type': 'text',
+    },
+    {
+        'id': 'field_body',
+        'type': 'text',
+    },
+    {
+        'id': 'field_photographs',
+        'type': 'json',
+    },
+    {
+        'id': 'field_website',
+        'type': 'text',
+    },
+    {
+        'id': 'field_email',
+        'type': 'text',
+    },
+    {
+        'id': 'field_phone',
+        'type': 'text',
+    },
+    {
+        'id': 'field_location_latitude',
+        'type': 'float',
+    },
+    {
+        'id': 'field_location_longitude',
+        'type': 'float',
+    },
+    {
+        'id': 'field_location_address_first_line',
+        'type': 'text',
+    },
+    {
+        'id': 'field_location_address_second_line',
+        'type': 'text',
+    },
+    {
+        'id': 'field_location_city',
+        'type': 'text',
+    },
+    {
+        'id': 'field_location_country',
+        'type': 'text',
+    },
+]
+
 
 # MyNeighbourhood constants
 JSON = 'json'
@@ -57,7 +122,7 @@ FIWARE_GOOD_STATUS = {
     'reasonPhrase': 'OK',
 }
 
-# 
+# GTFS file names
 GTFS_RESOURCES = {
     'agency',
     'calendar_dates',
@@ -101,7 +166,7 @@ CARRIS_NAME = 'CARRIS'
 CARRIS_URL = 'http://www.carris.pt'
 CARRIS_OST_PARAMS = {'publisher_name': 'Carris'}
 
-# GTFS Variables  
+# GTFS Variables
 AGENCY = 'Agency'
 ROUTE = 'Route'
 TRIP = 'Trip'

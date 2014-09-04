@@ -12,43 +12,48 @@ from datastore.ckan_client import CkanAccessDenied
 from datastore.ckan_client import CkanNotFound
 from datastore.datastore_loader import upload_resource_to_datastore
 from geopy.geocoders import GoogleV3
+from geopy.geocoders import Nominatim
 from geopy.exc import GeocoderTimedOut
 from geopy.exc import GeocoderQuotaExceeded
 
-from constants import BUS
-from constants import TRAIN
-from constants import JSON
-from constants import PLACE_BODY
-from constants import CKAN_API_KEY
-from constants import CKAN_AUTHORIZATION as CKAN_AUTH
-from constants import CKAN_DATASET
-from constants import CKAN_CARRIS_DATASET
-from constants import CKAN_CP_DATASET
-from constants import CKAN_HOST
-from constants import CKAN_PWD
-from constants import CKAN_RESOURCE_NAME
-from constants import CP_NAME
-from constants import CP_URL
-from constants import CARRIS_NAME
-from constants import CARRIS_URL
-from constants import DATASETS_NAMES
-from constants import GTFS_RESOURCES
-from constants import GTFS_EXTENSION
-from constants import OST_API_KEY
-from constants import OST_API_MAIN_URL
-from constants import OST_GTFS_PARAMS_CARRIS
-from constants import OST_GTFS_PARAMS_CP
-from constants import STOP
-from constants import TRANSPORTATION_CATEGORY
-from errors import CKANError
+
+# CKAN related
+from utils.constants import CKAN_API_KEY
+from utils.constants import CKAN_AUTHORIZATION as CKAN_AUTH
+from utils.constants import CKAN_DATASET
+from utils.constants import CKAN_CARRIS_DATASET
+from utils.constants import CKAN_CP_DATASET
+from utils.constants import CKAN_HOST
+from utils.constants import CKAN_PWD
+from utils.constants import CKAN_RESOURCE_NAME
+# OST related
+from utils.constants import OST_API_KEY
+from utils.constants import OST_API_MAIN_URL
+from utils.constants import OST_GTFS_PARAMS_CARRIS
+from utils.constants import OST_GTFS_PARAMS_CP
+# GTFS and API related
 from fiware.crawler import Crawler
-from utils import get_ckan_api
-from utils import get_ckan_error
-from utils import get_extension
-from utils import get_file_path
-from utils import get_ost_api
-from utils import get_string_type
-from utils import grouper
+from utils.constants import BUS
+from utils.constants import CARRIS_NAME
+from utils.constants import CARRIS_URL
+from utils.constants import CP_NAME
+from utils.constants import CP_URL
+from utils.constants import DATASETS_NAMES
+from utils.constants import GTFS_EXTENSION
+from utils.constants import GTFS_RESOURCES
+from utils.constants import JSON
+from utils.constants import PLACE_BODY
+from utils.constants import STOP
+from utils.constants import TRAIN
+from utils.constants import TRANSPORTATION_CATEGORY
+from utils.errors import CKANError
+from utils.utils import get_ckan_api
+from utils.utils import get_ckan_error
+from utils.utils import get_extension
+from utils.utils import get_file_path
+from utils.utils import get_ost_api
+from utils.utils import get_string_type
+from utils.utils import grouper
 
 
 class Connector(object):

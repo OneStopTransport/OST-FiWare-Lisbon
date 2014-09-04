@@ -3,20 +3,20 @@
 from celery.task import task
 from colorama import Fore
 
-from constants import CP_NAME
-from constants import AGENCY
-from constants import ROUTE
-from constants import STOP
-from constants import TRIP
-from constants import STOPTIME
-from constants import ID
+from utils.constants import CP_NAME
+from utils.constants import AGENCY
+from utils.constants import ROUTE
+from utils.constants import STOP
+from utils.constants import TRIP
+from utils.constants import STOPTIME
+from utils.constants import ID
+from utils.errors import APIKeyError
+from utils.errors import CrawlerError
+from utils.errors import OSTError
+from utils.errors import FiWareError
+from utils.utils import get_error_message
 from crawler import Crawler
-from errors import APIKeyError
-from errors import CrawlerError
-from errors import OSTError
-from errors import FiWareError
 from importer import FiWare
-from utils import get_error_message
 
 
 @task(name='transfer_gtfs_cb', ignore_result=True)

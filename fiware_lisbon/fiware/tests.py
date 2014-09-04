@@ -3,14 +3,14 @@ import unittest
 import requests
 import simplejson
 
-from constants import AGENCY
-from constants import CP_NAME
-from constants import FIWARE_HOST
-from constants import OST_API_KEY
-from constants import OST_API_MAIN_URL
+from utils.constants import AGENCY
+from utils.constants import CP_NAME
+from utils.constants import FIWARE_HOST
+from utils.constants import OST_API_KEY
+from utils.constants import OST_API_MAIN_URL
+from utils.utils import get_ost_api
 from crawler import Crawler
 from importer import FiWare
-from utils import get_ost_api
 
 
 class TestConstants(unittest.TestCase):

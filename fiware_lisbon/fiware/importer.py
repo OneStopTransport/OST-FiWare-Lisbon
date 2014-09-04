@@ -3,10 +3,10 @@
 import requests
 import simplejson
 
-from constants import FIWARE_HOST
-from constants import FIWARE_GOOD_STATUS
-from errors import FiWareError
-from utils import get_fiware_api
+from utils.constants import FIWARE_HOST
+from utils.constants import FIWARE_GOOD_STATUS
+from utils.errors import FiWareError
+from utils.utils import get_fiware_api
 
 
 class FiWare(object):

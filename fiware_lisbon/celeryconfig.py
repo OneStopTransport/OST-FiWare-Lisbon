@@ -4,10 +4,10 @@ from datetime import time
 
 from celery.schedules import crontab
 
-from constants import MQ_HOST
-from constants import MQ_USER
-from constants import MQ_PASSWORD
-from constants import MQ_VHOST
+from utils.constants import MQ_HOST
+from utils.constants import MQ_USER
+from utils.constants import MQ_PASSWORD
+from utils.constants import MQ_VHOST
 
 #
 # RABBIT-MQ CONFIG

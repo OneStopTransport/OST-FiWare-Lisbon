@@ -5,8 +5,9 @@ import os
 
 from colorama import Fore
 
-from errors import CKANError
-from errors import FiWareError
+from .errors import CKANError
+from .errors import FiWareError
+
 
 CKAN_TYPES = ['datastore', 'package', 'resource']
 
@@ -36,7 +37,7 @@ def get_file_path(dataset_name, file_name, file_ext):
 
 def get_extension(file_format):
     """ Returns the file extension of a given format """
-    from constants import GTFS_EXTENSION
+    from utils.constants import GTFS_EXTENSION
     if file_format:
         file_format = file_format.replace('.', '')
         return ''.join(('.', file_format.lower()))
