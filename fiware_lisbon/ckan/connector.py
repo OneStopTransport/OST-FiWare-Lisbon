@@ -3,6 +3,7 @@
 import csv
 import json
 import os
+import time
 from string import capwords
 from zipfile import ZipFile
 
@@ -17,6 +18,7 @@ from geopy.geocoders import GoogleV3
 from geopy.geocoders import Nominatim
 from geopy.exc import GeocoderTimedOut
 from geopy.exc import GeocoderQuotaExceeded
+from geopy.exc import GeocoderServiceError
 
 # CKAN related
 from utils.constants import CKAN_API_KEY
@@ -329,6 +331,9 @@ class Connector(object):
                                 geolocator_index = 0
                                 geolocator = geolocators[geolocator_index]
                                 break
+                        except GeocoderServiceError as e:
+                            print '\n\n>>>>>>>> Geocoder Service Error:', e, '\n\n'
+                            time.sleep(30)
                     place_name = capwords(stop['stop_name'])
                     body = PLACE_BODY.format(
                         agency_name, transport, place_name.encode('utf-8'),
