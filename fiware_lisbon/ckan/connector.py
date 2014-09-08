@@ -356,9 +356,8 @@ class Connector(object):
                     else:
                         place['field_neighbourhood'] = ''
                     if location:
-                        # Previously:
-                        #  location.raw.get('display_name').replace(';', ' ')
                         address = location.address
+                        address = address.replace('&', 'E').replace(';', ' ')
                         place['field_location_address_first_line'] = address
                     else:
                         place['field_location_address_first_line'] = ''
