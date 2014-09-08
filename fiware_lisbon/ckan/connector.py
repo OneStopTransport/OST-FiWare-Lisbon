@@ -3,6 +3,7 @@
 import csv
 import json
 import os
+import subprocess
 import time
 from string import capwords
 from zipfile import ZipFile
@@ -360,8 +361,13 @@ class Connector(object):
                         address = address.replace('&', 'E').replace(';', ' ')
                         place['field_location_address_first_line'] = address
                     else:
-                        place['field_location_address_first_line'] = ''
-
+                        input_str = '\"No Location for {}. Please enter it: \"'
+                        subprocess.call(['say', input_str])
+                        input_str = input_str.format(coords)
+                        address = raw_input(input_str)
+                        print 'You entered', address
+                        address = address.replace('&', 'E').replace(';', ' ')
+                        place['field_location_address_first_line'] = address
                     place['field_location_address_second_line'] = ''
                     if municipality:
                         municipality_name = municipality.get('name', '')
@@ -385,6 +391,9 @@ class Connector(object):
                 headers=CKAN_AUTH,
             )
             print "\n", response.content.encode('utf-8', 'replace'), "\n"
+            if response.status_code != 200:
+                print "\n\n>>>>>>>>>>>> ERROR"
+                print records
 
     def push_to_ckan(self, gtfs_csv=False):
         """

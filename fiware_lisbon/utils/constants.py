@@ -21,7 +21,7 @@ CKAN_PWD = 'ckan/data/'
 
 # CKAN Datasets
 # MyNeighbourhood Places - OST Stops as POIs
-CKAN_RESOURCE_NAME = 'FiwarePlace'
+CKAN_RESOURCE_NAME = 'OST Places'
 CKAN_DATASET_NAME = 'fiware-ost-lisbon-case'
 CKAN_DATASET = {
     'name': CKAN_DATASET_NAME,
@@ -41,66 +41,21 @@ CKAN_CP_DATASET = {
 }
 
 CKAN_DATASET_FIELDS = [
-    {
-        'id': 'field_poi_id',
-        'type': 'int',
-    },
-    {
-        'id': 'field_neighbourhood',
-        'type': 'text',
-    },
-    {
-        'id': 'field_title',
-        'type': 'text',
-    },
-    {
-        'id': 'field_category_places',
-        'type': 'text',
-    },
-    {
-        'id': 'field_body',
-        'type': 'text',
-    },
-    {
-        'id': 'field_photographs',
-        'type': 'json',
-    },
-    {
-        'id': 'field_website',
-        'type': 'text',
-    },
-    {
-        'id': 'field_email',
-        'type': 'text',
-    },
-    {
-        'id': 'field_phone',
-        'type': 'text',
-    },
-    {
-        'id': 'field_location_latitude',
-        'type': 'float',
-    },
-    {
-        'id': 'field_location_longitude',
-        'type': 'float',
-    },
-    {
-        'id': 'field_location_address_first_line',
-        'type': 'text',
-    },
-    {
-        'id': 'field_location_address_second_line',
-        'type': 'text',
-    },
-    {
-        'id': 'field_location_city',
-        'type': 'text',
-    },
-    {
-        'id': 'field_location_country',
-        'type': 'text',
-    },
+   { "id": "field_poi_id", "type": "integer" },
+   { "id": "field_neighbourhood", "type": "text" },
+   { "id": "field_title", "type": "text" },
+   { "id": "field_category_places", "type": "text" },
+   { "id": "field_body", "type": "text", },
+   { "id": "field_photographs", "type": "json" },
+   { "id": "field_website", "type": "text" },
+   { "id": "field_email", "type": "text" },
+   { "id": "field_phone", "type": "text" },
+   { "id": "field_location_latitude", "type": "float" },
+   { "id": "field_location_longitude", "type": "float" },
+   { "id": "field_location_address_first_line", "type": "text" },
+   { "id": "field_location_address_second_line", "type": "text" },
+   { "id": "field_location_city", "type": "text" },
+   { "id": "field_location_country", "type": "text" }
 ]
 
 
