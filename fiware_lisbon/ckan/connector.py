@@ -8,7 +8,6 @@ from string import capwords
 from zipfile import ZipFile
 
 import requests
-import simplejson
 from colorama import Fore
 from datastore.ckan_client import CkanClient
 from datastore.ckan_client import CkanAccessDenied
@@ -175,10 +174,10 @@ class Connector(object):
             )
             response = requests.post(
                 api,
-                data=simplejson.dumps(resource),
+                data=json.dumps(resource),
                 headers=CKAN_AUTH,
             )
-            resource = simplejson.loads(response.content)
+            resource = json.loads(response.content)
             if response.status_code != 200 or resource.get('success') is False:
                 return None
         except CkanAccessDenied:
@@ -383,7 +382,7 @@ class Connector(object):
             # print records
             response = requests.post(
                 api,
-                data=simplejson.dumps(records),
+                data=json.dumps(records),
                 headers=CKAN_AUTH,
             )
             print "\n", response.content.encode('utf-8', 'replace'), "\n"
