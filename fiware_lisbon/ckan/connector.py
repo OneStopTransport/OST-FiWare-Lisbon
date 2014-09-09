@@ -1,8 +1,10 @@
 #!/usr/bin/env python
 # encoding: utf-8
 import csv
+import glob
 import json
 import os
+import re
 import subprocess
 import time
 from string import capwords
@@ -34,6 +36,12 @@ from utils.constants import OST_API_KEY
 from utils.constants import OST_API_MAIN_URL
 from utils.constants import OST_GTFS_PARAMS_CARRIS
 from utils.constants import OST_GTFS_PARAMS_CP
+from utils.constants import OST_LOGIN_URL
+from utils.constants import OST_RECEPTION_API
+from utils.constants import OST_RECEPTION_COORDS
+# JSON to CSV related
+from utils.utils import to_keyvalue_pairs as to_keyval
+from utils.utils import json_to_csv
 # GTFS and API related
 from fiware.crawler import Crawler
 from utils.constants import BUS
@@ -327,12 +335,11 @@ class Connector(object):
                                 debug = 'Trying a new geocoder: {}...\n\n'
                                 print debug.format(type(geolocator).__name__)
                             else:
-                                print 'Oh noes, don\'t know what to do :(\n\n'
                                 geolocator_index = 0
                                 geolocator = geolocators[geolocator_index]
                                 break
                         except GeocoderServiceError as e:
-                            print '\n\n>>>>>>>> Geocoder Service Error:', e, '\n\n'
+                            print '\n\n>>>>>>>> Geocoder Service Error:', e
                             time.sleep(30)
                     place_name = capwords(stop['stop_name'])
                     body = PLACE_BODY.format(
@@ -450,3 +457,69 @@ class Connector(object):
                 resource_id = resource.get('id')
                 self.push_stops_to_ckan(self.cp_stops, True, resource_id)
                 self.push_stops_to_ckan(self.carris_stops, False, resource_id)
+
+    def pull_from_ckan(self):
+        """
+          Main routine that imports GTFS back to One.Stop.Transport
+        """
+        # TODO split this several functions
+        limit = 5000
+        datasets = (CKAN_CARRIS_DATASET, CKAN_CP_DATASET)
+        for each in datasets:
+            dataset = self.get_dataset(each)
+            for resource in dataset['resources']:
+                file_path = resource['url'].replace('file://', '')
+                print '\n', file_path
+                has_next = True
+                offset = 0
+                api = get_ckan_api(
+                    ckan_host=CKAN_HOST,
+                    ckan_type='datastore',
+                    ckan_action='search',
+                )
+                json_dict = []
+                while has_next:
+                    params = {
+                        'resource_id': resource['id'],
+                        'limit': limit,
+                        'offset': offset,
+                    }
+                    response = requests.get(url=api, params=params)
+                    if response.status_code == 200:
+                        # Convert the content to array of dicts
+                        json_resp = json.loads(response.content)
+                        json_data = json_resp['result']['records']
+                        json_dict.extend([dict(to_keyval(obj)) for obj in json_data])
+                        # Write to file
+                        has_next = len(json_data) >= limit
+                        offset += limit
+                json_to_csv(json_dict, file_path)
+            # Zip everything into a file
+            data_folder = ''.join([CKAN_PWD, dataset['name'], '/'])
+            zip_path = os.path.join(data_folder, 'gtfs.zip')
+            with ZipFile(zip_path, 'w') as myzip:
+                for file_ in glob.glob('{}*.txt'.format(data_folder)):
+                    name = re.findall(r'.+([a-z]+\.txt)', file_)
+                    myzip.write(file_, name[0])
+            # Uploads gtfs file to OST
+            fileobj = open(zip_path, 'rb')
+            provider = OST_RECEPTION_COORDS[dataset['name']]
+            client = requests.session()
+            client.get(OST_LOGIN_URL, verify=False)
+            csrftoken = client.cookies['csrftoken']
+            login_data = dict(username=provider[0], password=provider[1], csrfmiddlewaretoken=csrftoken, next='/')
+            # Authenticate the user
+            client.post(OST_LOGIN_URL, data=login_data, verify=False)
+            # Update the token
+            csrftoken = client.cookies['csrftoken']
+            data = dict(csrfmiddlewaretoken=csrftoken, next='/')
+            # Send the file to the web server
+            client.post(
+                OST_RECEPTION_API, 
+                data=data,
+                files={'dataset_file': ('gtfs.zip', fileobj, 'application/zip')},
+                verify=False,
+            )
+            # Close file
+            fileobj.close()
+

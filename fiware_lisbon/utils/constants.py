@@ -41,21 +41,21 @@ CKAN_CP_DATASET = {
 }
 
 CKAN_DATASET_FIELDS = [
-   { "id": "field_poi_id", "type": "integer" },
-   { "id": "field_neighbourhood", "type": "text" },
-   { "id": "field_title", "type": "text" },
-   { "id": "field_category_places", "type": "text" },
-   { "id": "field_body", "type": "text", },
-   { "id": "field_photographs", "type": "json" },
-   { "id": "field_website", "type": "text" },
-   { "id": "field_email", "type": "text" },
-   { "id": "field_phone", "type": "text" },
-   { "id": "field_location_latitude", "type": "float" },
-   { "id": "field_location_longitude", "type": "float" },
-   { "id": "field_location_address_first_line", "type": "text" },
-   { "id": "field_location_address_second_line", "type": "text" },
-   { "id": "field_location_city", "type": "text" },
-   { "id": "field_location_country", "type": "text" }
+    {"id": "field_poi_id", "type": "integer"},
+    {"id": "field_neighbourhood", "type": "text"},
+    {"id": "field_title", "type": "text"},
+    {"id": "field_category_places", "type": "text"},
+    {"id": "field_body", "type": "text"},
+    {"id": "field_photographs", "type": "json"},
+    {"id": "field_website", "type": "text"},
+    {"id": "field_email", "type": "text"},
+    {"id": "field_phone", "type": "text"},
+    {"id": "field_location_latitude", "type": "float"},
+    {"id": "field_location_longitude", "type": "float"},
+    {"id": "field_location_address_first_line", "type": "text"},
+    {"id": "field_location_address_second_line", "type": "text"},
+    {"id": "field_location_city", "type": "text"},
+    {"id": "field_location_country", "type": "text"}
 ]
 
 
@@ -96,6 +96,18 @@ OST_API_MAIN_URL = 'https://api.ost.pt/'
 OST_API_KEY = os.environ.get('OST_SERVER_KEY')
 OST_GTFS_PARAMS_CARRIS = {'publisher_name': 'Carris'}
 OST_GTFS_PARAMS_CP = {'publisher_name': 'ComboiosPortugal'}
+OST_LOGIN_URL = 'https://www.ost.pt/login'
+OST_RECEPTION_API = os.environ.get('OST_RECEPTION_API')
+OST_RECEPTION_COORDS = {
+    CKAN_CP_DATASET_NAME: (
+        os.environ.get('OST_CP_USERNAME'),
+        os.environ.get('OST_CP_PASSWORD'),
+    ),
+    CKAN_CARRIS_DATASET_NAME: (
+        os.environ.get('OST_CARRIS_USERNAME'),
+        os.environ.get('OST_CARRIS_PASSWORD'),
+    ),
+}
 
 DATASETS_NAMES = {
     OST_GTFS_PARAMS_CARRIS['publisher_name']: CKAN_CARRIS_DATASET_NAME,

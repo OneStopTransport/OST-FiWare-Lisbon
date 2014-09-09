@@ -37,5 +37,11 @@ def transfer_gtfs_ckan(full_gtfs=False):
         message = get_error_message(error)
         print(Fore.RED + str(error) + Fore.RESET + ':' + message)
 
+
+@task(name='transfer_gtfs_ost', ignore_result=True)
+def transfer_gtfs_ost():
+    connector = Connector()
+    connector.pull_from_ckan()
+
 if __name__ == '__main__':
     transfer_gtfs_ckan()

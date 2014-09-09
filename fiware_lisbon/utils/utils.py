@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # encoding: utf-8
+from itertools import chain
 from itertools import izip_longest
+import csv
 import os
 
 from colorama import Fore
@@ -143,3 +145,41 @@ def get_string_type(attribute):
             return 'float'
     except (ValueError, AttributeError):
         return 'string'
+
+
+# JSON TO CSV, inspired on http://blog.svnlabs.com/json2csv-convert-json-files-to-csv/
+
+
+def json_to_csv(json_data, output_file_path):
+    with open(output_file_path, "w+") as output_file:
+        dicts_to_csv(json_data, output_file)
+
+
+def to_keyvalue_pairs(source, ancestors=None, key_delimeter='_'):
+    def is_sequence(arg):
+        return not hasattr(arg, "strip") and hasattr(arg, "__getitem__") or hasattr(arg, "__iter__")
+
+    def is_dict(arg):
+        return hasattr(arg, "keys")
+    if ancestors is None:
+        ancestors = []
+    if is_dict(source):
+        result = [to_keyvalue_pairs(source[key], ancestors + [key]) for key in source.keys() if key != '_id']
+        return list(chain.from_iterable(result))
+    elif is_sequence(source):
+        result = [to_keyvalue_pairs(item, ancestors + [str(index)]) for (index, item) in enumerate(source)]
+        return list(chain.from_iterable(result))
+    else:
+        return [(key_delimeter.join(ancestors), source)]
+
+
+def dicts_to_csv(source, output_file):
+    def build_row(dict_obj, row_keys):
+        return [dict_obj.get(k) for k in row_keys]
+    keys = sorted(set(chain.from_iterable([o.keys() for o in source])))
+    rows = [build_row(d, keys) for d in source]
+    cw = csv.writer(output_file, lineterminator='\n')
+    cw.writerow(keys)
+    for row in rows:
+        cw.writerow([c.encode('utf-8') if isinstance(c, str) or isinstance(c, unicode) else c for c in row])
+
