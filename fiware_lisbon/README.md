@@ -9,7 +9,7 @@ There are two applications in this project:
 	- fetch GTFS files (CSV as specified by the standard) and push them to the DataStore (CKAN extension), using [another project's capabilities](https://github.com/rjfv/datastore-loader);
 	- fetch GTFS Stops located in the Lisbon district, convert them to a specific JSON format (specified by the project's consortium) and push them to CKAN DataStore, using its APIs directly. 
 
-It was also developed the capability to import GTFS data from CKAN back to OST. The app responsible for that is `ckan`, however it was created for demonstration purposes only.
+`utils` is not an application, it contains the exceptions, constants and other random stuff needed by the other two apps. Notice that the capability to import GTFS data from CKAN back to OST was also implemented. It's also `ckan` who's responsible for that, although it only serves for demonstration purposes.
 
 ---
 

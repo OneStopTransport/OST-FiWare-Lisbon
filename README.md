@@ -13,7 +13,7 @@ This project is more focused on CKAN, since the Orion Context Broker is more ade
   - If the data is the whole GTFS dataset, the `.txt` files are uploaded to CKAN;
   - If data only consists of bus/train stops, it is uploaded in a specific JSON format, established by the other partners involved.
 
-Read more technical information (setup and usage instructions) **[here](fiware_lisbon/README.md)**.
+Read more technical information (setup and usage instructions) **[here](fiware_lisbon)**.
 
 ---
 
